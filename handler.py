@@ -15,6 +15,11 @@ class Config:
         self.dirs = 'out'
         self.path = self.dirs + '/config.json'
         self.load_config()
+        self.drivers = {"mysql": ["mysql", "mysql+mysqldb", "mysql+pymysql"],
+                        "postgresql": ["postgresql", "postgresql+psycopg2", "postgresql+pg8000"],
+                        "oracle": ["oracle", "oracle+cx_oracle"],
+                        "mssql": ["mssql+pyodbc", "mssql+pymssql"],
+                        "sqlite": ["sqlite"]} 
         
     def load_config(self):
         try:
@@ -61,17 +66,6 @@ class Config:
                                       }
                                      }
         
-    def _getdriver(self, database):
-        #try:
-        print(os.getcwd())
-     
-        ##with open('drivers.json', encoding='utf-8') as f:
-         #   drivers = json.load(f)
-        #return drivers[database]
-       # except:    
-        #        print('<Config.class.get_driver()> Error Loading file')
-        #        return []
-
     def _getkeys(self, schema):
         for k_db, db in self.config.items():
             for k_s, s in db.items():
@@ -81,7 +75,7 @@ class Config:
     def get_config(self, schema):
         config = {}
         keys = self._getkeys(schema)
-        drivers = self._getdriver(keys['database'])
+        drivers = self.drivers[keys['database']]
         config = self.config[keys['database']][keys['key']]
         config.update({'drivers': drivers})
         config['schemas'] = schema
@@ -89,12 +83,13 @@ class Config:
         return self
         
     def add_schema(self, schema):
+        ## Incoming
         pass
     
     def list_config(self):
         print(json.dumps(self.config, indent=4))
     
-    def get_engine(self):
+    def build_engine(self):
         c = self.myconfig
         for driver in c['drivers']:
             try:
