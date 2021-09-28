@@ -1,0 +1,1 @@
+{"mysql": ["mysql", "mysql+mysqldb", "mysql+pymysql"], "postgresql": ["postgresql", "postgresql+psycopg2", "postgresql+pg8000"], "oracle": ["oracle", "oracle+cx_oracle"], "mssql": ["mssql+pyodbc", "mssql+pymssql"], "sqlite": ["sqlite"]} 
